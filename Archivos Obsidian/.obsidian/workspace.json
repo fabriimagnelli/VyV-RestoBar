@@ -1,0 +1,205 @@
+{
+  "main": {
+    "id": "f3ca5554988d29a0",
+    "type": "split",
+    "children": [
+      {
+        "id": "ff054e61b7f31dd7",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "4c591f23d5211d60",
+            "type": "leaf",
+            "state": {
+              "type": "empty",
+              "state": {},
+              "icon": "lucide-file",
+              "title": "New tab"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "vertical"
+  },
+  "left": {
+    "id": "7adf393bd3decf11",
+    "type": "split",
+    "children": [
+      {
+        "id": "54955beaf12b07d2",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "a834fc51c2647e32",
+            "type": "leaf",
+            "state": {
+              "type": "file-explorer",
+              "state": {
+                "sortOrder": "alphabetical",
+                "autoReveal": false,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-folder-closed",
+              "title": "Files"
+            }
+          },
+          {
+            "id": "fce86033f04817f9",
+            "type": "leaf",
+            "state": {
+              "type": "search",
+              "state": {
+                "query": "",
+                "matchingCase": false,
+                "explainSearch": false,
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical"
+              },
+              "icon": "lucide-search",
+              "title": "Search"
+            }
+          },
+          {
+            "id": "9326931976c9a529",
+            "type": "leaf",
+            "state": {
+              "type": "bookmarks",
+              "state": {
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-bookmark",
+              "title": "Bookmarks"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300
+  },
+  "right": {
+    "id": "ca8cc56474c89659",
+    "type": "split",
+    "children": [
+      {
+        "id": "6aade0602de71a7a",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "438221e4c614d17c",
+            "type": "leaf",
+            "state": {
+              "type": "backlink",
+              "state": {
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical",
+                "showSearch": false,
+                "searchQuery": "",
+                "backlinkCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-coming-in",
+              "title": "Backlinks"
+            }
+          },
+          {
+            "id": "a48ca4b04ef41e4b",
+            "type": "leaf",
+            "state": {
+              "type": "outgoing-link",
+              "state": {
+                "linksCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-going-out",
+              "title": "Outgoing links"
+            }
+          },
+          {
+            "id": "105784a3311811c9",
+            "type": "leaf",
+            "state": {
+              "type": "tag",
+              "state": {
+                "sortOrder": "frequency",
+                "useHierarchy": true,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-tags",
+              "title": "Tags"
+            }
+          },
+          {
+            "id": "4ac383d53508b2ed",
+            "type": "leaf",
+            "state": {
+              "type": "all-properties",
+              "state": {
+                "sortOrder": "frequency",
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-archive",
+              "title": "All properties"
+            }
+          },
+          {
+            "id": "5ed8288afa1cb464",
+            "type": "leaf",
+            "state": {
+              "type": "outline",
+              "state": {
+                "followCursor": false,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-list",
+              "title": "Outline"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300,
+    "collapsed": true
+  },
+  "left-ribbon": {
+    "hiddenItems": {
+      "switcher:Open quick switcher": false,
+      "graph:Open graph view": false,
+      "canvas:Create new canvas": false,
+      "daily-notes:Open today's daily note": false,
+      "templates:Insert template": false,
+      "command-palette:Open command palette": false,
+      "bases:Create new base": false
+    }
+  },
+  "active": "4c591f23d5211d60",
+  "lastOpenFiles": [
+    "INSTRUCCIONES_AGENTE.md",
+    "Archivos Obsidian/INSTRUCCIONES_AGENTE.md",
+    "Archivos Obsidian/07 - Informe Final y Defensa",
+    "Archivos Obsidian/06 - Artefactos No Código",
+    "Archivos Obsidian/05 - Automatización y Testing Técnico",
+    "Archivos Obsidian/04 - Ejecución y Defectos/Registro_Bugs.md",
+    "Archivos Obsidian/04 - Ejecución y Defectos",
+    "Archivos Obsidian/03 - Casos de Prueba (QA)",
+    "Archivos Obsidian/02 - Arquitectura y Código",
+    "Archivos Obsidian/01 - Requisitos y Análisis/Etapa_1_Analisis_del_Problema.md",
+    "Archivos Obsidian/01 - Requisitos y Análisis",
+    "Archivos Obsidian/00 - Planificación y Gestión",
+    "Archivos Obsidian",
+    "Nueva carpeta",
+    "04 - Ejecución y Defectos/Registro_Bugs.md",
+    "01 - Requisitos y Análisis/Etapa_1_Analisis_del_Problema.md",
+    "00 - Planificación y Gestión/Cronograma.md.md",
+    "Welcome.md"
+  ]
+}
