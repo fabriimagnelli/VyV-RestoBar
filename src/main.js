@@ -2,7 +2,7 @@
 import { store, getTodayIso } from './store.js';
 
 // --- ESTADO LOCAL DE LA INTERFAZ ---
-let currentView = 'client'; // 'client' | 'staff'
+let currentView = 'client'; // 'client' | 'staff' | 'floorplan'
 let staffTab = 'map'; // 'map' | 'reservations' | 'tables' | 'settings'
 
 // Estado del formulario de reserva del cliente
@@ -100,7 +100,7 @@ function renderApp() {
         </div>
 
         <div class="mode-toggle-group">
-          <button id="btnModeClient" class="mode-btn ${currentView === 'client' ? 'active' : ''}">
+          <button id="btnModeClient" class="mode-btn ${currentView === 'client' || currentView === 'floorplan' ? 'active' : ''}">
             ${ICONS.user}
             <span>Modo Cliente</span>
           </button>
@@ -113,7 +113,7 @@ function renderApp() {
     </header>
 
     <main class="main-app-content">
-      ${currentView === 'client' ? renderClientView(state) : renderStaffView(state)}
+      ${currentView === 'client' ? renderClientView(state) : (currentView === 'floorplan' ? renderFloorplanView(state) : renderStaffView(state))}
     </main>
   `;
 
@@ -148,7 +148,7 @@ function renderClientView(state) {
 
   return `
     <div class="client-cockpit">
-      <!-- Columna Izquierda: El Libro Mayor de Reservas -->
+      <!-- Panel Principal: El Libro Mayor de Reservas -->
       <section class="ledger-card">
         <div class="stamp-badge">
           ${ICONS.check}
@@ -265,70 +265,14 @@ function renderClientView(state) {
             <span>${currentSlotAvail.isAvailable ? `Confirmar Reserva ${slot} hs` : 'Sin Aforo en este horario'}</span>
           </button>
         </form>
-      </section>
 
-      <!-- Columna Derecha: Plano de Salón & Mesas en Mármol -->
-      <section class="marble-panel">
-        <div class="marble-header">
-          <div>
-            <h2 class="section-title-display">Plano de Salón & Ocupación</h2>
-            <div style="font-family: var(--font-quote); font-style: italic; font-size: 14px; color: var(--text-secondary); margin-top: 2px;">
-              Servicio de ${shift.toUpperCase()} · ${tables.filter(t => t.status === 'libre').length} Mesas libres de ${tables.length}
-            </div>
-          </div>
-          <div class="legend-group">
-            <div class="legend-item"><span class="status-dot dot-libre"></span>Libre</div>
-            <div class="legend-item"><span class="status-dot dot-reservada"></span>Reservada</div>
-            <div class="legend-item"><span class="status-dot dot-ocupada"></span>Ocupada</div>
-          </div>
-        </div>
-
-        <div style="font-size: 13px; color: var(--text-secondary); line-height: 1.4;">
-          Puede hacer clic sobre una mesa <b>Libre</b> para solicitarla como preferencia de ubicación para su reserva.
-        </div>
-
-        ${sectors.map(sec => {
-          const secTables = tables.filter(t => t.sector === sec.id);
-          if (secTables.length === 0) return '';
-
-          return `
-            <div class="sector-block">
-              <div class="sector-name-bar">
-                <span>${sec.label}</span>
-                <span style="font-size: 12px; font-weight: normal; color: var(--text-muted);">${sec.desc}</span>
-              </div>
-              <div class="tables-row-grid">
-                ${secTables.map(t => {
-                  const isSelected = preferredTableId === t.id;
-                  const canFit = t.capacity >= guests;
-                  const isLibre = t.status === 'libre';
-
-                  return `
-                    <div class="table-token-card ${isSelected ? 'selected-preferred' : ''} ${!canFit ? 'table-dimmed' : ''}" 
-                         data-table-id="${t.id}"
-                         title="${isLibre ? 'Haga clic para elegir esta mesa' : 'Mesa ocupada/reservada'}">
-                      <div class="table-card-top">
-                        <span class="table-number-label">${t.number}</span>
-                        <span class="table-capacity-tag">
-                          ${ICONS.user}
-                          <span>${t.capacity}p</span>
-                        </span>
-                      </div>
-
-                      <div style="font-size: 11px; color: var(--text-secondary); margin: 6px 0;">
-                        ${t.name}
-                      </div>
-
-                      <span class="table-pill-state pill-${t.status}">
-                        ${isSelected ? 'Tu Selección' : t.status}
-                      </span>
-                    </div>
-                  `;
-                }).join('')}
-              </div>
-            </div>
-          `;
-        }).join('')}
+        <!-- Botón para ver Plano de Salón -->
+        <button type="button" id="btnViewFloorplan" class="btn-floorplan-link">
+          ${ICONS.mapPin}
+          <span>Ver Plano de Salón & Ocupación en Vivo</span>
+          <span class="floorplan-link-meta">${tables.filter(t => t.status === 'libre').length} mesas libres de ${tables.length} · Turno ${shift}</span>
+          <svg class="floorplan-arrow" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg>
+        </button>
       </section>
     </div>
   `;
@@ -403,6 +347,92 @@ function renderConfirmationReceipt(res, settings) {
           ← Realizar otra reserva
         </button>
       </div>
+    </div>
+  `;
+}
+
+// =========================================================================
+// VISTA PLANO DE SALÓN (Página separada desde vista cliente)
+// =========================================================================
+function renderFloorplanView(state) {
+  const { shift, guests, sector, preferredTableId } = bookingState;
+  const tables = state.tables.filter(t => t.active);
+
+  const sectors = [
+    { id: 'salon', label: 'Salón Principal', desc: 'Ambiente clásico, lámparas de bronce y banquetas' },
+    { id: 'terraza', label: "Terraza d'Hiver", desc: 'Exterior semicubierto con pérgola y vegetación' },
+    { id: 'barra', label: 'Comptoir Zinc & Barra', desc: 'Mesas altas junto al barista y coctelería' }
+  ];
+
+  return `
+    <div class="floorplan-page">
+      <button type="button" id="btnBackToBooking" class="btn-back-link">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"></polyline></svg>
+        <span>Volver a Reserva</span>
+      </button>
+
+      <section class="marble-panel">
+        <div class="marble-header">
+          <div>
+            <h2 class="section-title-display">Plano de Salón & Ocupación</h2>
+            <div style="font-family: var(--font-quote); font-style: italic; font-size: 14px; color: var(--text-secondary); margin-top: 2px;">
+              Servicio de ${shift.toUpperCase()} · ${tables.filter(t => t.status === 'libre').length} Mesas libres de ${tables.length}
+            </div>
+          </div>
+          <div class="legend-group">
+            <div class="legend-item"><span class="status-dot dot-libre"></span>Libre</div>
+            <div class="legend-item"><span class="status-dot dot-reservada"></span>Reservada</div>
+            <div class="legend-item"><span class="status-dot dot-ocupada"></span>Ocupada</div>
+          </div>
+        </div>
+
+        <div style="font-size: 13px; color: var(--text-secondary); line-height: 1.4;">
+          Puede hacer clic sobre una mesa <b>Libre</b> para solicitarla como preferencia de ubicación para su reserva.
+        </div>
+
+        ${sectors.map(sec => {
+          const secTables = tables.filter(t => t.sector === sec.id);
+          if (secTables.length === 0) return '';
+
+          return `
+            <div class="sector-block">
+              <div class="sector-name-bar">
+                <span>${sec.label}</span>
+                <span style="font-size: 12px; font-weight: normal; color: var(--text-muted);">${sec.desc}</span>
+              </div>
+              <div class="tables-row-grid">
+                ${secTables.map(t => {
+                  const isSelected = preferredTableId === t.id;
+                  const canFit = t.capacity >= guests;
+                  const isLibre = t.status === 'libre';
+
+                  return `
+                    <div class="table-token-card ${isSelected ? 'selected-preferred' : ''} ${!canFit ? 'table-dimmed' : ''}" 
+                         data-table-id="${t.id}"
+                         title="${isLibre ? 'Haga clic para elegir esta mesa' : 'Mesa ocupada/reservada'}">
+                      <div class="table-card-top">
+                        <span class="table-number-label">${t.number}</span>
+                        <span class="table-capacity-tag">
+                          ${ICONS.user}
+                          <span>${t.capacity}p</span>
+                        </span>
+                      </div>
+
+                      <div style="font-size: 11px; color: var(--text-secondary); margin: 6px 0;">
+                        ${t.name}
+                      </div>
+
+                      <span class="table-pill-state pill-${t.status}">
+                        ${isSelected ? 'Tu Selección' : t.status}
+                      </span>
+                    </div>
+                  `;
+                }).join('')}
+              </div>
+            </div>
+          `;
+        }).join('')}
+      </section>
     </div>
   `;
 }
@@ -897,6 +927,18 @@ function attachEvents() {
     renderApp();
   });
 
+  // Navegación a Plano de Salón (desde vista cliente)
+  document.getElementById('btnViewFloorplan')?.addEventListener('click', () => {
+    currentView = 'floorplan';
+    renderApp();
+  });
+
+  // Volver del Plano a la Reserva
+  document.getElementById('btnBackToBooking')?.addEventListener('click', () => {
+    currentView = 'client';
+    renderApp();
+  });
+
   // 2. Eventos Modo Cliente
   if (currentView === 'client') {
     // Selector de Fecha
@@ -938,18 +980,6 @@ function attachEvents() {
         bookingState.sector = btn.dataset.sector;
         bookingState.preferredTableId = null;
         renderApp();
-      });
-    });
-
-    // Click en Mesa del Plano para seleccionarla como preferida
-    document.querySelectorAll('.table-token-card[data-table-id]').forEach(card => {
-      card.addEventListener('click', () => {
-        const tableId = card.dataset.tableId;
-        const table = store.getState().tables.find(t => t.id === tableId);
-        if (table && table.status === 'libre') {
-          bookingState.preferredTableId = bookingState.preferredTableId === tableId ? null : tableId;
-          renderApp();
-        }
       });
     });
 
@@ -998,6 +1028,21 @@ function attachEvents() {
       bookingState.phone = '';
       bookingState.notes = '';
       renderApp();
+    });
+  }
+
+  // 2b. Eventos Vista Plano de Salón
+  if (currentView === 'floorplan') {
+    // Click en Mesa del Plano para seleccionarla como preferida
+    document.querySelectorAll('.table-token-card[data-table-id]').forEach(card => {
+      card.addEventListener('click', () => {
+        const tableId = card.dataset.tableId;
+        const table = store.getState().tables.find(t => t.id === tableId);
+        if (table && table.status === 'libre') {
+          bookingState.preferredTableId = bookingState.preferredTableId === tableId ? null : tableId;
+          renderApp();
+        }
+      });
     });
   }
 

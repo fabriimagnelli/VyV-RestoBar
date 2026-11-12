@@ -223,10 +223,11 @@ body {
 
 /* Grid Layout for Client Dual View */
 .client-cockpit {
-  display: grid;
-  grid-template-columns: 500px 1fr;
-  gap: 36px;
-  align-items: start;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  max-width: 640px;
+  margin: 0 auto;
 }
 
 /* The Ledger Card */
@@ -604,6 +605,92 @@ body {
   display: flex;
   flex-direction: column;
   gap: 24px;
+}
+
+/* Floorplan Link Button (inside client view) */
+.btn-floorplan-link {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  width: 100%;
+  margin-top: 24px;
+  padding: 20px 24px;
+  background: var(--bg-inset);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-align: left;
+  position: relative;
+}
+.btn-floorplan-link:hover {
+  background: var(--bg-surface);
+  border-color: var(--brass-gold);
+  box-shadow: var(--shadow-md);
+}
+.btn-floorplan-link > svg:first-child {
+  color: var(--brass-gold);
+  flex-shrink: 0;
+}
+.btn-floorplan-link > span:first-of-type {
+  font-family: var(--font-display);
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text-primary);
+  letter-spacing: 0.3px;
+}
+.floorplan-link-meta {
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  margin-left: auto;
+  padding-right: 24px;
+}
+.floorplan-arrow {
+  position: absolute;
+  right: 20px;
+  color: var(--text-muted);
+  transition: transform 0.2s ease, color 0.2s ease;
+}
+.btn-floorplan-link:hover .floorplan-arrow {
+  transform: translateX(3px);
+  color: var(--brass-gold);
+}
+
+/* Floorplan Standalone Page */
+.floorplan-page {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  max-width: 960px;
+  margin: 0 auto;
+}
+
+/* Back button */
+.btn-back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-family: var(--font-body);
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  padding: 8px 4px;
+  transition: color 0.2s ease;
+  align-self: flex-start;
+}
+.btn-back-link:hover {
+  color: var(--brass-gold);
+}
+.btn-back-link svg {
+  transition: transform 0.2s ease;
+}
+.btn-back-link:hover svg {
+  transform: translateX(-3px);
 }
 
 .marble-header {
@@ -1135,7 +1222,7 @@ body {
 /* Responsive Media Queries */
 @media (max-width: 1080px) {
   .client-cockpit {
-    grid-template-columns: 1fr;
+    max-width: 100%;
   }
   .app-header {
     padding: 0 20px;

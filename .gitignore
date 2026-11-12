@@ -16,6 +16,16 @@ yarn-error.log*
 Thumbs.db
 .vscode/
 .idea/
+/.obsidian/
+
+# AI Tooling & Local Skills
+.agent/
+.agents/
+.claude/
+.codex/
+.gemini/
+.impeccable/
+.opencode/
 
 # impeccable-live-ignore-start
 .impeccable/hook.cache.json
